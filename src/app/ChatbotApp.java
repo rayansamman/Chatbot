@@ -17,11 +17,13 @@ import java.util.Scanner;
 
 public class ChatbotApp {
     public static void main(String[] args) {
-        // Initialize chatbot configuration
-        ChatbotConfig config = ChatbotConfig.getInstance();
-        config.setBotName("AssistantBot");
+        // Load configuration from a file
+        ChatbotConfig.loadConfig("config.properties");
 
-        // Initialize behavioral.InputAdapter, Strategy, and behavioral.EventManager
+        // Print the loaded settings
+        ChatbotConfig config = ChatbotConfig.getInstance();
+        config.printConfig();
+
         InputAdapter inputAdapter = new UserInputAdapter();
         ResponseStrategy currentStrategy = new SmallTalkStrategy(); // Default strategy
         EventManager eventManager = new EventManager();
@@ -42,8 +44,32 @@ public class ChatbotApp {
 
             if (userInput.equalsIgnoreCase("exit")) {
                 eventManager.notifyObservers("User exited the chatbot.");
-                System.out.println("Chatbot: Goodbye!");
+                System.out.println("Chatbot: Saving your preferences...");
+                ChatbotConfig.getInstance().saveConfig("config.properties");
+                System.out.println("Chatbot: Preferences saved. Goodbye!");
                 break;
+            }
+
+            // Handle configuration updates
+            if (userInput.startsWith("set name ")) {
+                String newName = userInput.replace("set name ", "");
+                ChatbotConfig.getInstance().setBotName(newName);
+                System.out.println("Chatbot: You can now call me " + newName + "!");
+                continue;
+            }
+
+            if (userInput.startsWith("set theme ")) {
+                String newTheme = userInput.replace("set theme ", "");
+                ChatbotConfig.getInstance().setTheme(newTheme);
+                System.out.println("Chatbot: Theme changed to " + newTheme + ".");
+                continue;
+            }
+
+            if (userInput.startsWith("set language ")) {
+                String newLanguage = userInput.replace("set language ", "");
+                ChatbotConfig.getInstance().setLanguage(newLanguage);
+                System.out.println("Chatbot: Language set to " + newLanguage + ".");
+                continue;
             }
 
             // Switch to FAQ strategy
@@ -54,15 +80,17 @@ public class ChatbotApp {
                 continue;
             }
 
-            // Handle decorated responses for predefined commands
+            // Handle predefined commands
             if (userInput.equalsIgnoreCase("greeting") || userInput.equalsIgnoreCase("farewell") || userInput.equalsIgnoreCase("help")) {
                 handlePredefinedCommands(userInput);
                 continue;
             }
 
+            // Generate response using the current strategy
             String response = currentStrategy.generateResponse(userInput);
             System.out.println("Chatbot: " + response);
 
+            // Notify observers about the processed input
             eventManager.notifyObservers("User input processed: " + userInput);
         }
 

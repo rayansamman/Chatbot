@@ -1,3 +1,5 @@
+package behavioral;
+
 public class UserInputAdapter implements InputAdapter {
     @Override
     public String adaptInput(String input) {

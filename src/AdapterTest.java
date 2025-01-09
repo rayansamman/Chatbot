@@ -1,3 +1,6 @@
+import behavioral.InputAdapter;
+import behavioral.UserInputAdapter;
+
 public class AdapterTest {
     public static void main(String[] args) {
         InputAdapter adapter = new UserInputAdapter();

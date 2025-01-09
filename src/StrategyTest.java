@@ -1,3 +1,7 @@
+import behavioral.FAQStrategy;
+import behavioral.ResponseStrategy;
+import behavioral.SmallTalkStrategy;
+
 public class StrategyTest {
     public static void main(String[] args) {
         ResponseStrategy smallTalk = new SmallTalkStrategy();

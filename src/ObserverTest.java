@@ -1,3 +1,7 @@
+import behavioral.ConsoleLogger;
+import behavioral.EventManager;
+import behavioral.EventObserver;
+
 public class ObserverTest {
     public static void main(String[] args) {
         // Create Event Manager and Logger

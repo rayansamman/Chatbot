@@ -1,3 +1,5 @@
+package behavioral;
+
 public class FAQStrategy implements ResponseStrategy {
     @Override
     public String generateResponse(String input) {

@@ -1,3 +1,5 @@
+package behavioral;
+
 public class SmallTalkStrategy implements ResponseStrategy {
     @Override
     public String generateResponse(String input) {

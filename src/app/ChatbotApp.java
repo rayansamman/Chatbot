@@ -50,7 +50,6 @@ public class ChatbotApp {
                 break;
             }
 
-            // Handle configuration updates
             if (userInput.startsWith("set name ")) {
                 String newName = userInput.replace("set name ", "");
                 ChatbotConfig.getInstance().setBotName(newName);
@@ -58,21 +57,13 @@ public class ChatbotApp {
                 continue;
             }
 
-            if (userInput.startsWith("set theme ")) {
-                String newTheme = userInput.replace("set theme ", "");
-                ChatbotConfig.getInstance().setTheme(newTheme);
-                System.out.println("Chatbot: Theme changed to " + newTheme + ".");
+            if (userInput.startsWith("set mood ")) {
+                String newMood = userInput.replace("set mood ", "");
+                ChatbotConfig.getInstance().setMood(newMood);
+                System.out.println("Chatbot: Mood changed to " + newMood + ".");
                 continue;
             }
 
-            if (userInput.startsWith("set language ")) {
-                String newLanguage = userInput.replace("set language ", "");
-                ChatbotConfig.getInstance().setLanguage(newLanguage);
-                System.out.println("Chatbot: Language set to " + newLanguage + ".");
-                continue;
-            }
-
-            // Switch to FAQ strategy
             if (userInput.equalsIgnoreCase("faq")) {
                 currentStrategy = new FAQStrategy();
                 eventManager.notifyObservers("Switched to FAQ mode.");
@@ -80,21 +71,34 @@ public class ChatbotApp {
                 continue;
             }
 
-            // Handle predefined commands
             if (userInput.equalsIgnoreCase("greeting") || userInput.equalsIgnoreCase("farewell") || userInput.equalsIgnoreCase("help")) {
                 handlePredefinedCommands(userInput);
                 continue;
             }
 
-            // Generate response using the current strategy
             String response = currentStrategy.generateResponse(userInput);
-            System.out.println("Chatbot: " + response);
+            String adjustedResponse = adjustResponseBasedOnMood(response);
+            System.out.println("Chatbot: " + adjustedResponse);
 
             // Notify observers about the processed input
             eventManager.notifyObservers("User input processed: " + userInput);
         }
 
         scanner.close();
+    }
+
+    // Adjust response based on mood
+    private static String adjustResponseBasedOnMood(String response) {
+        String mood = ChatbotConfig.getInstance().getMood();
+
+        switch (mood.toLowerCase()) {
+            case "happy":
+                return response + " 😊";
+            case "grumpy":
+                return "Ugh... " + response + " 🙄";
+            default: // Neutral
+                return response;
+        }
     }
 
     // Handle predefined commands with decorators

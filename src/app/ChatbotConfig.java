@@ -1,4 +1,4 @@
-package chatbot.app;
+package app;
 
 public class ChatbotConfig {
     private static ChatbotConfig instance;

@@ -1,10 +1,10 @@
-package chatbot.app;
+package app;
 
-import chatbot.decorator.EmojiDecorator;
-import chatbot.decorator.TextFormatterDecorator;
-import chatbot.response.types.GreetingResponse;
-import chatbot.response.Response;
-import chatbot.response.ResponseFactory;
+import decorator.EmojiDecorator;
+import decorator.TextFormatterDecorator;
+import response.types.GreetingResponse;
+import response.Response;
+import response.ResponseFactory;
 
 import java.util.Scanner;
 

@@ -1,7 +1,7 @@
-package chatbot.decorator;
+package decorator;
 
-import chatbot.response.Response;
-import chatbot.response.ResponseDecorator;
+import response.Response;
+import response.ResponseDecorator;
 
 public class EmojiDecorator extends ResponseDecorator {
     public EmojiDecorator(Response response) {

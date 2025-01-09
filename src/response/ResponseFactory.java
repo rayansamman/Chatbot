@@ -1,8 +1,8 @@
-package chatbot.response;
+package response;
 
-import chatbot.response.types.HelpResponse;
-import chatbot.response.types.FarewellResponse;
-import chatbot.response.types.GreetingResponse;
+import response.types.HelpResponse;
+import response.types.FarewellResponse;
+import response.types.GreetingResponse;
 
 public class ResponseFactory {
     public static Response createResponse(String type) {

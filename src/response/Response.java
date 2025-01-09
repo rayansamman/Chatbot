@@ -1,4 +1,4 @@
-package chatbot.response;
+package response;
 
 public interface Response {
     String getMessage();

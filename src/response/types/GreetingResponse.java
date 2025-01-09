@@ -1,6 +1,6 @@
-package chatbot.response.types;
+package response.types;
 
-import chatbot.response.Response;
+import response.Response;
 
 public class GreetingResponse implements Response {
     @Override

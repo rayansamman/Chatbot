@@ -1,4 +1,4 @@
-package chatbot.response;
+package response;
 
 public abstract class ResponseDecorator implements Response {
     protected Response response;

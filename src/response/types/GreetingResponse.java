@@ -9,8 +9,8 @@ public class GreetingResponse implements Response {
         String mood = ChatbotConfig.getInstance().getMood();
 
         return switch (mood.toLowerCase()) {
-            case "happy" -> "Hey there! So happy to see you! 😊";
-            case "grumpy" -> "Oh... it's you. What do you want? 🙄";
+            case "happy" -> "Hey there! So happy to see you!";
+            case "grumpy" -> "Oh... it's you. What do you want?";
             default -> "Hello! How can I assist you?";
         };
     }

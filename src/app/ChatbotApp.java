@@ -103,14 +103,11 @@ public class ChatbotApp {
 
     // Handle predefined commands with decorators
     private static void handlePredefinedCommands(String input) {
-        try {
-            Response response = ResponseFactory.createResponse(input);
+        // Use the factory to create a response
+        Response response = ResponseFactory.createResponse(input);
 
-            // Dynamically decorate the response
-            Response decoratedResponse = new EmojiDecorator(new TextFormatterDecorator(response));
-            System.out.println("Chatbot: " + decoratedResponse.getMessage());
-        } catch (IllegalArgumentException e) {
-            System.out.println("Chatbot: Sorry, I didn't understand that. Type 'help' for a list of commands.");
-        }
+        Response decoratedResponse = new EmojiDecorator(new TextFormatterDecorator(response));
+        System.out.println("Chatbot: " + decoratedResponse.getMessage());
     }
+
 }

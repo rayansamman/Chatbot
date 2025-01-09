@@ -12,6 +12,10 @@ import behavioral.SmallTalkStrategy;
 import behavioral.FAQStrategy;
 import behavioral.EventManager;
 import behavioral.ConsoleLogger;
+import behavioral.ExternalAPIAdapter;
+import behavioral.FakeJokeAPIAdapter;
+import behavioral.JokeStrategy;
+import behavioral.FileLogger;
 
 import java.util.Scanner;
 
@@ -20,17 +24,19 @@ public class ChatbotApp {
         // Initialize chatbot configuration
         ChatbotConfig config = ChatbotConfig.getInstance();
         config.setBotName("AssistantBot");
+        config.setLanguage("English");
 
         // Initialize behavioral.InputAdapter, Strategy, and behavioral.EventManager
         InputAdapter inputAdapter = new UserInputAdapter();
         ResponseStrategy currentStrategy = new SmallTalkStrategy(); // Default strategy
         EventManager eventManager = new EventManager();
         eventManager.addObserver(new ConsoleLogger());
+        eventManager.addObserver(new FileLogger()); // Add FileLogger
 
         // Welcome message with decorators
         Response welcome = new EmojiDecorator(new TextFormatterDecorator(new GreetingResponse()));
         System.out.println("Chatbot (" + config.getBotName() + "): " + welcome.getMessage());
-        System.out.println("Type 'greeting', 'farewell', 'help', 'faq', or 'exit' to quit.");
+        System.out.println("Type 'greeting', 'farewell', 'help', 'faq', 'joke', 'jokeapi', or 'exit' to quit.");
 
         Scanner scanner = new Scanner(System.in);
 
@@ -38,6 +44,7 @@ public class ChatbotApp {
             System.out.print("You: ");
             String userInput = scanner.nextLine();
 
+            // Adapt the user input
             userInput = inputAdapter.adaptInput(userInput);
 
             if (userInput.equalsIgnoreCase("exit")) {
@@ -54,15 +61,32 @@ public class ChatbotApp {
                 continue;
             }
 
+            // Switch to Joke strategy
+            if (userInput.equalsIgnoreCase("joke")) {
+                currentStrategy = new JokeStrategy();
+                eventManager.notifyObservers("Switched to Joke mode.");
+                System.out.println("Chatbot: Switched to Joke mode.");
+                continue;
+            }
+
+            // Handle joke using ExternalAPIAdapter
+            if (userInput.equalsIgnoreCase("jokeapi")) {
+                ExternalAPIAdapter jokeAPI = new FakeJokeAPIAdapter();
+                System.out.println("Chatbot: " + jokeAPI.getResponse(userInput));
+                continue;
+            }
+
             // Handle decorated responses for predefined commands
             if (userInput.equalsIgnoreCase("greeting") || userInput.equalsIgnoreCase("farewell") || userInput.equalsIgnoreCase("help")) {
                 handlePredefinedCommands(userInput);
                 continue;
             }
 
+            // Generate a response using the current strategy
             String response = currentStrategy.generateResponse(userInput);
             System.out.println("Chatbot: " + response);
 
+            // Notify observers about user input
             eventManager.notifyObservers("User input processed: " + userInput);
         }
 

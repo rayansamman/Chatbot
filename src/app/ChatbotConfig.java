@@ -1,9 +1,9 @@
 package app;
 
 public class ChatbotConfig {
-    private static ChatbotConfig instance;
-    private String botName;
-    private String language;
+    private static ChatbotConfig instance; // Singleton instance
+    private String botName;               // Name of the chatbot
+    private String language;              // Language setting for the chatbot
 
     private ChatbotConfig() {
         // Default settings
@@ -32,5 +32,13 @@ public class ChatbotConfig {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatbotConfig {" +
+                "botName='" + botName + '\'' +
+                ", language='" + language + '\'' +
+                '}';
     }
 }

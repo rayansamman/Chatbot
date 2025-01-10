@@ -1,3 +1,5 @@
+package tests;
+
 import behavioral.ConsoleLogger;
 import behavioral.EventManager;
 import behavioral.EventObserver;

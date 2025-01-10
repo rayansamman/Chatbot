@@ -1,3 +1,5 @@
+package tests;
+
 import behavioral.FAQStrategy;
 import behavioral.ResponseStrategy;
 import behavioral.SmallTalkStrategy;

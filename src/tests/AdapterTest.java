@@ -1,3 +1,5 @@
+package tests;
+
 import behavioral.InputAdapter;
 import behavioral.UserInputAdapter;
 

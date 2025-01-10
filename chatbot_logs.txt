@@ -1,0 +1,2 @@
+[LOG]: Switched to Joke mode.
+[LOG]: User exited the chatbot.

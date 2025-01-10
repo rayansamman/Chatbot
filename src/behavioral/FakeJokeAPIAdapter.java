@@ -1,3 +1,5 @@
+package behavioral;
+
 public class FakeJokeAPIAdapter implements ExternalAPIAdapter {
     private static final String[] JOKES = {
             "Why don't skeletons fight each other? Because they don’t have the guts!",

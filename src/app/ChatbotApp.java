@@ -12,7 +12,6 @@ import behavioral.SmallTalkStrategy;
 import behavioral.FAQStrategy;
 import behavioral.EventManager;
 import behavioral.ConsoleLogger;
-
 import java.util.Scanner;
 
 public class ChatbotApp {
@@ -77,28 +76,13 @@ public class ChatbotApp {
             }
 
             String response = currentStrategy.generateResponse(userInput);
-            String adjustedResponse = adjustResponseBasedOnMood(response);
-            System.out.println("Chatbot: " + adjustedResponse);
+            System.out.println("Chatbot: " + response);
 
             // Notify observers about the processed input
             eventManager.notifyObservers("User input processed: " + userInput);
         }
 
         scanner.close();
-    }
-
-    // Adjust response based on mood
-    private static String adjustResponseBasedOnMood(String response) {
-        String mood = ChatbotConfig.getInstance().getMood();
-
-        switch (mood.toLowerCase()) {
-            case "happy":
-                return response + " 😊";
-            case "grumpy":
-                return "Ugh... " + response + " 🙄";
-            default: // Neutral
-                return response;
-        }
     }
 
     // Handle predefined commands with decorators
@@ -109,5 +93,4 @@ public class ChatbotApp {
         Response decoratedResponse = new EmojiDecorator(new TextFormatterDecorator(response));
         System.out.println("Chatbot: " + decoratedResponse.getMessage());
     }
-
 }

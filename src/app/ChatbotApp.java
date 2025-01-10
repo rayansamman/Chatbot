@@ -12,6 +12,11 @@ import behavioral.SmallTalkStrategy;
 import behavioral.FAQStrategy;
 import behavioral.EventManager;
 import behavioral.ConsoleLogger;
+import behavioral.ExternalAPIAdapter;
+import behavioral.FakeJokeAPIAdapter;
+import behavioral.JokeStrategy;
+import behavioral.FileLogger;
+
 import java.util.Scanner;
 
 public class ChatbotApp {
@@ -27,11 +32,12 @@ public class ChatbotApp {
         ResponseStrategy currentStrategy = new SmallTalkStrategy(); // Default strategy
         EventManager eventManager = new EventManager();
         eventManager.addObserver(new ConsoleLogger());
+        eventManager.addObserver(new FileLogger()); // Add FileLogger for logging to a file
 
         // Welcome message with decorators
         Response welcome = new EmojiDecorator(new TextFormatterDecorator(new GreetingResponse()));
         System.out.println("Chatbot (" + config.getBotName() + "): " + welcome.getMessage());
-        System.out.println("Type 'greeting', 'farewell', 'help', 'faq', or 'exit' to quit.");
+        System.out.println("Type 'greeting', 'farewell', 'help', 'faq', 'joke', 'jokeapi', or 'exit' to quit.");
 
         Scanner scanner = new Scanner(System.in);
 
@@ -70,6 +76,22 @@ public class ChatbotApp {
                 continue;
             }
 
+            // Switch to Joke strategy
+            if (userInput.equalsIgnoreCase("joke")) {
+                currentStrategy = new JokeStrategy();
+                eventManager.notifyObservers("Switched to Joke mode.");
+                System.out.println("Chatbot: Switched to Joke mode.");
+                continue;
+            }
+
+            // Handle joke using ExternalAPIAdapter
+            if (userInput.equalsIgnoreCase("jokeapi")) {
+                ExternalAPIAdapter jokeAPI = new FakeJokeAPIAdapter();
+                System.out.println("Chatbot: " + jokeAPI.getResponse(userInput));
+                continue;
+            }
+
+            // Handle decorated responses for predefined commands
             if (userInput.equalsIgnoreCase("greeting") || userInput.equalsIgnoreCase("farewell") || userInput.equalsIgnoreCase("help")) {
                 handlePredefinedCommands(userInput);
                 continue;
@@ -87,7 +109,6 @@ public class ChatbotApp {
 
     // Handle predefined commands with decorators
     private static void handlePredefinedCommands(String input) {
-        // Use the factory to create a response
         Response response = ResponseFactory.createResponse(input);
 
         Response decoratedResponse = new EmojiDecorator(new TextFormatterDecorator(response));

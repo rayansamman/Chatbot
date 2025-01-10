@@ -131,12 +131,6 @@ This project was developed collaboratively by **Alisiia** and **Rayan**. Through
 
 ## Features and Design Patterns in Action
 
-### **Introduction**
-
-This chatbot project showcases teamwork and the application of multiple design patterns. The project is hosted on GitHub with a clear file structure, and all relevant files are submitted in a zip archive. Both team members contributed equally to the project by collaborating in person and via remote tools like Teams, ensuring a balanced and coordinated effort.
-
----
-
 ### **Creational Patterns**
 
 #### 1. Factory Pattern

@@ -7,8 +7,12 @@ This project is a Java-based chatbot that demonstrates the implementation of var
 - **Factory Pattern** for dynamically creating response objects.
 - **Decorator Pattern** for enhancing chatbot responses dynamically.
 - **Singleton Pattern** for managing chatbot configurations globally.
+- **Adapter Pattern** for connecting external functionalities.
+- **Strategy Pattern** for dynamic chatbot behavior switching.
+- **Observer Pattern** for event notifications and logging.
 
-The chatbot allows users to interact with predefined commands such as `greeting`, `farewell`, `help`, or `exit`. It dynamically generates responses and applies decorators for customized outputs. Users can also customize the chatbot's **name** and **mood**, with preferences saved across sessions.
+The chatbot allows users to interact with predefined commands such as `greeting`, `farewell`, `help`, `faq`, `joke`, or `exit`. It dynamically generates responses and applies decorators for customized outputs.
+
 
 ---
 
@@ -32,7 +36,8 @@ The chatbot allows users to interact with predefined commands such as `greeting`
 
 4. **Interact with the Chatbot**:
 
-    - Type commands like `greeting`, `farewell`, `help`, `set name`, `set mood`, or `exit` in the console.
+    - Type commands like `greeting`, `farewell`, `help`,`faq`, `joke` or `exit` in the console.
+
 
 ---
 
@@ -40,7 +45,9 @@ The chatbot allows users to interact with predefined commands such as `greeting`
 
 ### This topic for keeping track and updating each other 
 
+
 ## My steps (Alisiia)
+ behavioral-patterns
 
 ### 1. **Implemented Design Patterns**
 
@@ -114,11 +121,9 @@ The chatbot allows users to interact with predefined commands such as `greeting`
 - **Neutral Mood**:
     - **Response**: `Hello! How can I assist you?`
 - **Happy Mood**:
-    - **Response**: `[Hey there! So happy to see you!] 😊`
-- **Casual Mood**:
-    - **Response**: `~Hey! What's up?~`
+    - **Response**: `Hey there! So happy to see you! 😊`
 - **Grumpy Mood**:
-    - **Response**: `OH... IT'S YOU. WHAT DO YOU WANT? 🙄``
+    - **Response**: `Oh... it's you. What do you want? 🙄`
 
 ---
 
@@ -130,5 +135,143 @@ The chatbot allows users to interact with predefined commands such as `greeting`
 - Add unit tests for better reliability using JUnit.
 - Expand the chatbot's "mood" system with more dynamic behaviors (e.g., "curious", "excited").
 - Add a logging system to track user interactions for analytics.
+
+---
+
+## Notes for Teammate 💕
+
+- Refactored the file structure.
+
+![img.png](img.png)
+
+
+## Steps by Rayan
+
+### 1. **Implemented Behavioral Patterns**
+
+#### **Adapter Pattern (Structural)**
+
+- **Purpose**: Connect the chatbot with external functionalities, such as joke generation.
+- **What I Did**:
+    - Created the `ExternalAPIAdapter` interface.
+    - Implemented `FakeJokeAPIAdapter` to simulate joke fetching from a fake external API.
+    - Integrated the `FakeJokeAPIAdapter` into `ChatbotApp` to handle the `jokeapi` command.
+- **How It Works**:
+    - When the user types `jokeapi`, the chatbot uses the adapter to fetch a joke dynamically.
+    - Example: `"Why don't skeletons fight each other? Because they don’t have the guts!"`
+
+#### **Strategy Pattern (Behavioral)**
+
+- **Purpose**: Dynamically switch between chatbot strategies based on user input.
+- **What I Did**:
+    - Created the `ResponseStrategy` interface.
+    - Implemented strategies like:
+        - `SmallTalkStrategy`: Handles casual user input like "how are you."
+        - `FAQStrategy`: Handles frequently asked questions like "help" or "pricing."
+        - `JokeStrategy`: Delivers jokes based on user input.
+    - Integrated strategy switching into `ChatbotApp` to dynamically change the chatbot's behavior.
+- **How It Works**:
+    - The chatbot starts with the `SmallTalkStrategy` by default.
+    - Users can switch to `FAQStrategy` by typing `faq` or to `JokeStrategy` by typing `joke`.
+
+#### **Observer Pattern (Behavioral)**
+
+- **Purpose**: Notify modules when certain events occur in the chatbot.
+- **What I Did**:
+    - Created the `EventObserver` interface and `EventManager` class.
+    - Implemented observers like:
+        - `ConsoleLogger`: Logs events to the console.
+        - `FileLogger`: Logs events to a file (`chatbot_logs.txt`).
+    - Integrated observers into `ChatbotApp` to monitor events like:
+        - User input processing.
+        - Switching strategies.
+        - Exiting the chatbot.
+- **How It Works**:
+    - The `ConsoleLogger` and `FileLogger` receive notifications whenever an event occurs, such as a user exiting the chatbot or switching conversation modes.
+
+---
+
+### 2. **Integrated the Behavioral Patterns into ChatbotApp**
+
+#### Updated Code Files
+
+1. **ChatbotApp.java**
+    - Added commands for switching between strategies (`faq`, `joke`).
+    - Integrated support for `jokeapi` using the `FakeJokeAPIAdapter`.
+    - Integrated the `EventManager` to notify observers (both `ConsoleLogger` and `FileLogger`) about user activities.
+
+2. **EventObserver.java**:
+    - Interface for handling events within the chatbot system.
+
+3. **EventManager.java**:
+    - Manages all observers and broadcasts events.
+
+4. **FakeJokeAPIAdapter.java**:
+    - Simulates fetching jokes from an external API.
+
+5. **ResponseStrategy Implementations**:
+    - **SmallTalkStrategy**: Handles casual chat.
+    - **FAQStrategy**: Responds to FAQs.
+    - **JokeStrategy**: Provides jokes.
+
+6. **FileLogger.java**:
+    - Logs events to a file named `chatbot_logs.txt`.
+
+#### Testing
+- Verified all patterns by testing:
+    - Switching between conversation modes (`faq`, `joke`).
+    - Fetching jokes using `jokeapi`.
+    - Logging events in both console and file.
+
+---
+
+## Features 
+
+### 1. **Commands**
+
+- `faq`: Switches to the FAQ mode.
+- `joke`: Switches to the Joke mode.
+- `jokeapi`: Fetches a joke using the `FakeJokeAPIAdapter`.
+
+### 2. **Dynamic Strategy Switching**
+
+- Chatbot changes its behavior dynamically based on user input (e.g., switching between Small Talk, FAQ, and Joke modes).
+
+### 3. **Event Logging**
+
+- All chatbot events are logged:
+    - In the console (via `ConsoleLogger`).
+    - In a file (`chatbot_logs.txt`, via `FileLogger`).
+
+---
+
+## Examples of Interaction
+
+### Switching Strategies
+- **Input**: `faq`
+- **Response**: `Chatbot: Switched to FAQ mode.`
+
+- **Input**: `joke`
+- **Response**: `Chatbot: Switched to Joke mode.`
+
+### Using the Fake Joke API
+- **Input**: `jokeapi`
+- **Response**: `"Why don't skeletons fight each other? Because they don’t have the guts!"`
+
+---
+
+### 3. **Improvements to the File Structure**
+
+- Separated classes into appropriate packages:
+    - **Behavioral**: Contains observer, strategy, and adapter patterns.
+    - **App**: Core chatbot application.
+    - **Response**: All response-related classes (factory and decorators).
+    - **Decorator**: Emoji and text formatting decorators.
+
+### 4. **Logging and Observer Enhancements**
+
+- Added `FileLogger` to log user interactions into a file.
+- Integrated both `ConsoleLogger` and `FileLogger` for comprehensive logging.
+- Enhanced the `EventManager` to handle notifications seamlessly.
 
 ---

@@ -89,4 +89,3 @@ public class ChatbotConfig implements Serializable {
         System.out.println("Mood: " + mood);
     }
 
-}

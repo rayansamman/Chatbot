@@ -12,7 +12,6 @@ import behavioral.SmallTalkStrategy;
 import behavioral.FAQStrategy;
 import behavioral.EventManager;
 import behavioral.ConsoleLogger;
-
 import java.util.Scanner;
 
 public class ChatbotApp {
@@ -77,8 +76,7 @@ public class ChatbotApp {
             }
 
             String response = currentStrategy.generateResponse(userInput);
-            String adjustedResponse = adjustResponseBasedOnMood(response);
-            System.out.println("Chatbot: " + adjustedResponse);
+            System.out.println("Chatbot: " + response);
 
             // Notify observers about the processed input
             eventManager.notifyObservers("User input processed: " + userInput);
@@ -87,30 +85,12 @@ public class ChatbotApp {
         scanner.close();
     }
 
-    // Adjust response based on mood
-    private static String adjustResponseBasedOnMood(String response) {
-        String mood = ChatbotConfig.getInstance().getMood();
-
-        switch (mood.toLowerCase()) {
-            case "happy":
-                return response + " 😊";
-            case "grumpy":
-                return "Ugh... " + response + " 🙄";
-            default: // Neutral
-                return response;
-        }
-    }
-
     // Handle predefined commands with decorators
     private static void handlePredefinedCommands(String input) {
-        try {
-            Response response = ResponseFactory.createResponse(input);
+        // Use the factory to create a response
+        Response response = ResponseFactory.createResponse(input);
 
-            // Dynamically decorate the response
-            Response decoratedResponse = new EmojiDecorator(new TextFormatterDecorator(response));
-            System.out.println("Chatbot: " + decoratedResponse.getMessage());
-        } catch (IllegalArgumentException e) {
-            System.out.println("Chatbot: Sorry, I didn't understand that. Type 'help' for a list of commands.");
-        }
+        Response decoratedResponse = new EmojiDecorator(new TextFormatterDecorator(response));
+        System.out.println("Chatbot: " + decoratedResponse.getMessage());
     }
 }

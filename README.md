@@ -114,9 +114,11 @@ The chatbot allows users to interact with predefined commands such as `greeting`
 - **Neutral Mood**:
     - **Response**: `Hello! How can I assist you?`
 - **Happy Mood**:
-    - **Response**: `Hey there! So happy to see you! 😊`
+    - **Response**: `[Hey there! So happy to see you!] 😊`
+- **Casual Mood**:
+    - **Response**: `~Hey! What's up?~`
 - **Grumpy Mood**:
-    - **Response**: `Oh... it's you. What do you want? 🙄`
+    - **Response**: `OH... IT'S YOU. WHAT DO YOU WANT? 🙄``
 
 ---
 
@@ -130,9 +132,3 @@ The chatbot allows users to interact with predefined commands such as `greeting`
 - Add a logging system to track user interactions for analytics.
 
 ---
-
-## Notes for Teammate 💕
-
-- Refactored the file structure.
-
-![img.png](img.png)

@@ -1,8 +1,5 @@
 package app;
 
-
-
-
 import java.io.*;
 import java.util.Properties;
 
@@ -92,11 +89,4 @@ public class ChatbotConfig implements Serializable {
         System.out.println("Mood: " + mood);
     }
 
-    @Override
-    public String toString() {
-        return "ChatbotConfig {" +
-                "botName='" + botName + '\'' +
-                ", language='" + language + '\'' +
-                '}';
-    }
 }

@@ -26,12 +26,11 @@ public class ChatbotApp {
 
         // Print the loaded settings
         ChatbotConfig config = ChatbotConfig.getInstance();
-        behavioral-patterns
+
         config.setBotName("AssistantBot");
-        config.setLanguage("English");
 
         config.printConfig();
-        development
+
 
         InputAdapter inputAdapter = new UserInputAdapter();
         ResponseStrategy currentStrategy = new SmallTalkStrategy(); // Default strategy

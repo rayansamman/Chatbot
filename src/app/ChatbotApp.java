@@ -35,9 +35,12 @@ public class ChatbotApp {
         eventManager.addObserver(new ConsoleLogger());
         eventManager.addObserver(new FileLogger());
 
-        // Welcome message with decorators
-        Response welcome = new EmojiDecorator(new TextFormatterDecorator(new GreetingResponse()));
+        // Initial welcome message with mood-based response
+        ResponseFactory responseFactory = ResponseFactorySelector.getFactory();
+        Response welcome = responseFactory.createGreetingResponse();
+        welcome = new EmojiDecorator(new TextFormatterDecorator(welcome));  // Apply dynamic decorators
         System.out.println("Chatbot (" + config.getBotName() + "): " + welcome.getMessage());
+
         System.out.println("Type 'greeting', 'farewell', 'help', 'faq', 'joke', 'jokeapi', or 'exit' to quit.");
 
         Scanner scanner = new Scanner(System.in);
@@ -110,7 +113,6 @@ public class ChatbotApp {
 
     // Handle predefined commands with decorators
     private static void handlePredefinedCommands(String input) {
-        // Use the factory selector to get the correct factory based on mood
         ResponseFactory responseFactory = ResponseFactorySelector.getFactory();
 
         Response response;

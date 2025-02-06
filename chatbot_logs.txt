@@ -1,3 +1,10 @@
 [LOG]: Switched to Joke mode.
 [LOG]: User exited the chatbot.
 [LOG]: User exited the chatbot.
+[LOG]: User input processed: quit
+[LOG]: User exited the chatbot.
+[LOG]: User exited the chatbot.
+[LOG]: User exited the chatbot.
+[LOG]: Switched to FAQ mode.
+[LOG]: Switched to FAQ mode.
+[LOG]: User input processed: ?

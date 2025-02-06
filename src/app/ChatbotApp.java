@@ -75,18 +75,19 @@ public class ChatbotApp {
 
             // Switch to Joke strategy
             if (userInput.equalsIgnoreCase("joke")) {
-                currentStrategy = new JokeStrategy();
+                currentStrategy = new JokeStrategy(new JokeAPIAdapter(new JokeAPI()));
                 eventManager.notifyObservers("Switched to Joke mode.");
-                System.out.println("Chatbot: Switched to Joke mode.");
+                System.out.println("Chatbot: Switched to Joke mode (local jokes or API-based).");
                 continue;
             }
 
-            // Handle joke using ExternalAPIAdapter
-            if (userInput.equalsIgnoreCase("jokeapi")) {
-                String joke = jokeAPIAdapter.getResponse(userInput);
-                System.out.println("Chatbot: " + joke);
+            // Handle joke-related input based on the current strategy
+            if (userInput.equalsIgnoreCase("joke") || userInput.equalsIgnoreCase("jokeapi")) {
+                String jokeResponse = currentStrategy.generateResponse(userInput);
+                System.out.println("Chatbot: " + jokeResponse);
                 continue;
             }
+
 
             // Handle decorated responses for predefined commands
             if (userInput.equalsIgnoreCase("greeting") || userInput.equalsIgnoreCase("farewell") || userInput.equalsIgnoreCase("help")) {

@@ -1,22 +1,13 @@
 package app;
 
+import behavioral.*;
 import decorator.EmojiDecorator;
 import decorator.TextFormatterDecorator;
 import response.Response;
 import response.factory.ResponseFactory;
 import response.factory.ResponseFactorySelector;
 import response.types.GreetingResponse;
-import behavioral.InputAdapter;
-import behavioral.UserInputAdapter;
-import behavioral.ResponseStrategy;
-import behavioral.SmallTalkStrategy;
-import behavioral.FAQStrategy;
-import behavioral.EventManager;
-import behavioral.ConsoleLogger;
-import behavioral.ExternalAPIAdapter;
-import behavioral.FakeJokeAPIAdapter;
-import behavioral.JokeStrategy;
-import behavioral.FileLogger;
+import behavioral.JokeAPIAdapter;
 
 import java.util.Scanner;
 
@@ -51,6 +42,8 @@ public class ChatbotApp {
 
             userInput = inputAdapter.adaptInput(userInput);
 
+            JokeAPI jokeAPI = new JokeAPI();
+            ExternalAPIAdapter jokeAPIAdapter = new JokeAPIAdapter(jokeAPI);
             if (userInput.equalsIgnoreCase("exit")) {
                 eventManager.notifyObservers("User exited the chatbot.");
                 System.out.println("Chatbot: Saving your preferences...");
@@ -90,8 +83,8 @@ public class ChatbotApp {
 
             // Handle joke using ExternalAPIAdapter
             if (userInput.equalsIgnoreCase("jokeapi")) {
-                ExternalAPIAdapter jokeAPI = new FakeJokeAPIAdapter();
-                System.out.println("Chatbot: " + jokeAPI.getResponse(userInput));
+                String joke = jokeAPIAdapter.getResponse(userInput);
+                System.out.println("Chatbot: " + joke);
                 continue;
             }
 

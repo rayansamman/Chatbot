@@ -13,6 +13,7 @@ public class HelpResponse implements Response {
                 - Use 'set name [name]' to change my name.
                 - Use 'set mood [mood]' to change my mood (e.g., happy, grumpy).
                 - Type 'faq' to switch to FAQ mode.
+                - Type 'Tell me jokes' to switch to Joke mode.
                 - Type 'exit' to leave the chat.
                 """;
     }

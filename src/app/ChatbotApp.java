@@ -6,8 +6,6 @@ import decorator.TextFormatterDecorator;
 import response.Response;
 import response.factory.ResponseFactory;
 import response.factory.ResponseFactorySelector;
-import response.types.GreetingResponse;
-import behavioral.JokeAPIAdapter;
 
 import java.util.Scanner;
 
@@ -26,24 +24,26 @@ public class ChatbotApp {
         eventManager.addObserver(new ConsoleLogger());
         eventManager.addObserver(new FileLogger());
 
+        // Joke strategy with API integration
+        ExternalAPIAdapter jokeAPIAdapter = new JokeAPIAdapter(new JokeAPI());
+        JokeStrategy jokeStrategy = new JokeStrategy(jokeAPIAdapter);
+
         // Initial welcome message with mood-based response
         ResponseFactory responseFactory = ResponseFactorySelector.getFactory();
         Response welcome = responseFactory.createGreetingResponse();
-        welcome = new EmojiDecorator(new TextFormatterDecorator(welcome));  // Apply dynamic decorators
+        welcome = new EmojiDecorator(new TextFormatterDecorator(welcome));
         System.out.println("Chatbot (" + config.getBotName() + "): " + welcome.getMessage());
 
-        System.out.println("Type 'greeting', 'farewell', 'help', 'faq', 'joke', 'jokeapi', or 'exit' to quit.");
+        System.out.println("Type 'greeting', 'farewell', 'help', 'faq', 'jokes', or 'exit' to quit.");
 
         Scanner scanner = new Scanner(System.in);
+        boolean jokesMode = false;
 
         while (true) {
             System.out.print("You: ");
             String userInput = scanner.nextLine();
-
             userInput = inputAdapter.adaptInput(userInput);
 
-            JokeAPI jokeAPI = new JokeAPI();
-            ExternalAPIAdapter jokeAPIAdapter = new JokeAPIAdapter(jokeAPI);
             if (userInput.equalsIgnoreCase("exit")) {
                 eventManager.notifyObservers("User exited the chatbot.");
                 System.out.println("Chatbot: Saving your preferences...");
@@ -74,20 +74,24 @@ public class ChatbotApp {
             }
 
             // Switch to Joke strategy
-            if (userInput.equalsIgnoreCase("joke")) {
-                currentStrategy = new JokeStrategy(new JokeAPIAdapter(new JokeAPI()));
-                eventManager.notifyObservers("Switched to Joke mode.");
-                System.out.println("Chatbot: Switched to Joke mode (local jokes or API-based).");
+            if (userInput.equalsIgnoreCase("Tell me jokes")) {
+                jokesMode = true;
+                System.out.println("Chatbot: Welcome to Jokes Mode! Type 'more' for local jokes or 'I want something new' for API jokes.");
                 continue;
             }
 
-            // Handle joke-related input based on the current strategy
-            if (userInput.equalsIgnoreCase("joke") || userInput.equalsIgnoreCase("jokeapi")) {
-                String jokeResponse = currentStrategy.generateResponse(userInput);
+            // Handle joke-related input in Jokes Mode
+            if (jokesMode) {
+                String jokeResponse = jokeStrategy.generateResponse(userInput);
                 System.out.println("Chatbot: " + jokeResponse);
+
+                // If the user wants to exit jokes mode, they can type a different command.
+                if (userInput.equalsIgnoreCase("exit jokes")) {
+                    jokesMode = false;
+                    System.out.println("Chatbot: Exiting Jokes Mode.");
+                }
                 continue;
             }
-
 
             // Handle decorated responses for predefined commands
             if (userInput.equalsIgnoreCase("greeting") || userInput.equalsIgnoreCase("farewell") || userInput.equalsIgnoreCase("help")) {
@@ -95,6 +99,7 @@ public class ChatbotApp {
                 continue;
             }
 
+            // Generate a response using the current strategy
             String response = currentStrategy.generateResponse(userInput);
             System.out.println("Chatbot: " + response);
 

@@ -16,3 +16,4 @@
 [LOG]: User input processed: give me
 [LOG]: User input processed: next
 [LOG]: User input processed: wow
+[LOG]: User input processed: joke

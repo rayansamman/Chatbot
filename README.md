@@ -251,3 +251,22 @@ As part of the feedback, several improvements were made to ensure alignment with
    The chatbot’s response generation flow was refined by introducing **mood-specific factories** that are selected dynamically using the `ResponseFactorySelector` class.
     - The **base response objects** (e.g., `GreetingResponse`, `FarewellResponse`) are now created through mood-specific factories (`HappyResponseFactory`, `GrumpyResponseFactory`, `NeutralResponseFactory`).
     - Once created, the responses are **wrapped with decorators** dynamically within `ChatbotApp`, allowing mood-sensitive output formatting and emoji inclusion.
+
+### **Updated Files for Jokes System**
+
+1. **`ChatbotApp.java`**
+    - **Added logic** to switch to **Jokes Mode**.
+    - **Integrated user commands** for `'Tell me jokes'`, `'more'`, and `'I want something new'`.
+    - **Handles switching** between **local jokes** and **API jokes** dynamically.
+
+2. **`JokeStrategy.java`**
+    - **Enhanced** to include the **local jokes store**.
+    - **Dynamically selects jokes** based on user commands within **Jokes Mode**.
+
+3. **`JokeAPIAdapter.java`**
+    - **Connects** to the **`JokeAPI`** service.
+    - **Fetches and adapts jokes** from the **external API** for the chatbot.
+
+4. **`JokeAPI.java`**
+    - **Simulates** the actual **external API** connection and response.
+    - Can be replaced with a **real external API** in the future without affecting the chatbot's functionality.

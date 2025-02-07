@@ -273,5 +273,5 @@ Updated Files for Jokes System:
     - **Fetches and adapts jokes** from the **external API** for the chatbot.
 
 4. **`JokeAPI.java`**
-    - **Simulates** the actual **external API** connection and response.
-    - Can be replaced with a **real external API** in the future without affecting the chatbot's functionality.
+    - Create the actual external API connection and response.
+    - Can be replaced with a real external API in the future without affecting the chatbot's functionality.

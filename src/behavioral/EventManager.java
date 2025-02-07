@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventManager {
-    private List<EventObserver> observers = new ArrayList<>();
+    private final List<EventObserver> observers = new ArrayList<>();
 
     public void addObserver(EventObserver observer) {
         observers.add(observer);
@@ -14,5 +14,9 @@ public class EventManager {
         for (EventObserver observer : observers) {
             observer.onEvent(event);
         }
+    }
+
+    public void removeObserver(EventObserver observer) {
+        observers.remove(observer);
     }
 }

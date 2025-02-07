@@ -10,25 +10,26 @@ import response.factory.ResponseFactorySelector;
 import java.util.Scanner;
 
 public class ChatbotApp {
+    private static ResponseStrategy currentStrategy = new SmallTalkStrategy(); // Default strategy
+    private static EventManager eventManager = new EventManager();
+    private static boolean jokesMode = false;
+    private static JokeStrategy jokeStrategy;
+
     public static void main(String[] args) {
         // Load configuration from a file
         ChatbotConfig.loadConfig("config.properties");
-
-        // Print the loaded settings
         ChatbotConfig config = ChatbotConfig.getInstance();
         config.printConfig();
 
         InputAdapter inputAdapter = new UserInputAdapter();
-        ResponseStrategy currentStrategy = new SmallTalkStrategy();
-        EventManager eventManager = new EventManager();
         eventManager.addObserver(new ConsoleLogger());
         eventManager.addObserver(new FileLogger());
 
-        // Joke strategy with API integration
-        ExternalAPIAdapter jokeAPIAdapter = new JokeAPIAdapter(new JokeAPI());
-        JokeStrategy jokeStrategy = new JokeStrategy(jokeAPIAdapter);
+        // Initialize joke strategy with API integration
+        ExternalAPIAdapter jokeAPIAdapter = new FakeJokeAPIAdapter(); 
+        jokeStrategy = new JokeStrategy(jokeAPIAdapter);
 
-        // Initial welcome message with mood-based response
+        // Welcome message
         ResponseFactory responseFactory = ResponseFactorySelector.getFactory();
         Response welcome = responseFactory.createGreetingResponse();
         welcome = new EmojiDecorator(new TextFormatterDecorator(welcome));
@@ -37,7 +38,6 @@ public class ChatbotApp {
         System.out.println("Type 'greeting', 'farewell', 'help', 'faq', 'jokes', or 'exit' to quit.");
 
         Scanner scanner = new Scanner(System.in);
-        boolean jokesMode = false;
 
         while (true) {
             System.out.print("You: ");
@@ -67,25 +67,19 @@ public class ChatbotApp {
             }
 
             if (userInput.equalsIgnoreCase("faq")) {
-                currentStrategy = new FAQStrategy();
-                eventManager.notifyObservers("Switched to FAQ mode.");
-                System.out.println("Chatbot: Switched to FAQ mode.");
+                setStrategy(new FAQStrategy());
                 continue;
             }
 
-            // Switch to Joke strategy
-            if (userInput.equalsIgnoreCase("Tell me jokes")) {
-                jokesMode = true;
-                System.out.println("Chatbot: Welcome to Jokes Mode! Type 'more' for local jokes or 'I want something new' for API jokes.");
+            if (userInput.equalsIgnoreCase("joke")) {
+                setStrategy(jokeStrategy);
                 continue;
             }
 
-            // Handle joke-related input in Jokes Mode
+            // Handle joke mode
             if (jokesMode) {
-                String jokeResponse = jokeStrategy.generateResponse(userInput);
-                System.out.println("Chatbot: " + jokeResponse);
+                System.out.println("Chatbot: " + jokeStrategy.generateResponse(userInput));
 
-                // If the user wants to exit jokes mode, they can type a different command.
                 if (userInput.equalsIgnoreCase("exit jokes")) {
                     jokesMode = false;
                     System.out.println("Chatbot: Exiting Jokes Mode.");
@@ -93,24 +87,26 @@ public class ChatbotApp {
                 continue;
             }
 
-            // Handle decorated responses for predefined commands
             if (userInput.equalsIgnoreCase("greeting") || userInput.equalsIgnoreCase("farewell") || userInput.equalsIgnoreCase("help")) {
                 handlePredefinedCommands(userInput);
                 continue;
             }
 
-            // Generate a response using the current strategy
+            // Generate response using the current strategy
             String response = currentStrategy.generateResponse(userInput);
             System.out.println("Chatbot: " + response);
-
-            // Notify observers about the processed input
             eventManager.notifyObservers("User input processed: " + userInput);
         }
 
         scanner.close();
     }
 
-    // Handle predefined commands with decorators
+    public static void setStrategy(ResponseStrategy strategy) {
+        currentStrategy = strategy;
+        eventManager.notifyObservers("Chatbot strategy changed to: " + strategy.getClass().getSimpleName());
+        System.out.println("Chatbot: Switched to " + strategy.getClass().getSimpleName() + " mode.");
+    }
+
     private static void handlePredefinedCommands(String input) {
         ResponseFactory responseFactory = ResponseFactorySelector.getFactory();
 
@@ -130,7 +126,6 @@ public class ChatbotApp {
                 return;
         }
 
-        // Apply decorators dynamically based on mood
         Response decoratedResponse = new EmojiDecorator(new TextFormatterDecorator(response));
         System.out.println("Chatbot: " + decoratedResponse.getMessage());
     }

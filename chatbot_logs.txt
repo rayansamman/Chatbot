@@ -8,3 +8,12 @@
 [LOG]: Switched to FAQ mode.
 [LOG]: Switched to FAQ mode.
 [LOG]: User input processed: ?
+[LOG]: Switched to Joke mode.
+[LOG]: User input processed: give a joke
+[LOG]: User input processed: and
+[LOG]: User input processed: lol
+[LOG]: Switched to Joke mode.
+[LOG]: User input processed: give me
+[LOG]: User input processed: next
+[LOG]: User input processed: wow
+[LOG]: User input processed: joke

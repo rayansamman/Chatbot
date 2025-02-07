@@ -11,7 +11,7 @@ This project is a Java-based chatbot that demonstrates the implementation of var
 - **Strategy Pattern** for dynamic chatbot behavior switching.
 - **Observer Pattern** for event notifications and logging.
 
-The chatbot allows users to interact with predefined commands such as `greeting`, `farewell`, `help`, `faq`, `joke`, or `exit`. It dynamically generates responses and applies decorators for customized outputs.
+The chatbot allows users to interact with predefined commands such as `greeting`, `farewell`, `help`, `faq`, `Tell me jokes`, or `exit`. It dynamically generates responses and applies decorators for customized outputs.
 
 ---
 
@@ -35,7 +35,7 @@ The chatbot allows users to interact with predefined commands such as `greeting`
 
 4. **Interact with the Chatbot**:
 
-    - Type commands like `greeting`, `farewell`, `help`, `faq`, `joke` or `exit` in the console.
+    - Type commands like `greeting`, `farewell`, `help`, `faq`, `Tell me jokes` or `exit` in the console.
 
 ---
 
@@ -83,7 +83,7 @@ This project was developed collaboratively by **Alisiia** and **Rayan**. Through
 - Refactored the chatbot's main logic into reusable methods.
 - Dynamically applied decorators to all responses.
 - Improved the user experience with enhanced messages and error handling.
-- Introduced mood-based responses (e.g., "happy", "grumpy", "neutral", "formal", "casual") to change the chatbot's tone dynamically. Additionally, integrated mood-sensitive text formatting through the `TextFormatterDecorator`, which adapts the chatbot's response presentation based on the current mood.
+- Introduced mood-based responses (e.g., "happy", "grumpy", "neutral") to change the chatbot's tone dynamically. Additionally, integrated mood-sensitive text formatting through the `TextFormatterDecorator`, which adapts the chatbot's response presentation based on the current mood.
 
 ---
 
@@ -94,8 +94,8 @@ This project was developed collaboratively by **Alisiia** and **Rayan**. Through
 - **Adapter Pattern (Structural)**:
 
     - Created the `ExternalAPIAdapter` interface.
-    - Implemented `FakeJokeAPIAdapter` to simulate joke fetching from a fake external API.
-    - Integrated the `FakeJokeAPIAdapter` into `ChatbotApp` to handle the `jokeapi` command.
+    - Implemented `JokeAPIAdapter` to simulate joke fetching from an external API.
+    - Integrated the `JokeAPIAdapter` into `ChatbotApp` to handle the `jokeapi` command.
 
 - **Strategy Pattern (Behavioral)**:
 
@@ -122,7 +122,7 @@ This project was developed collaboratively by **Alisiia** and **Rayan**. Through
 - Updated `ChatbotApp.java`:
 
     - Added commands for switching between strategies (`faq`, `joke`).
-    - Integrated support for `jokeapi` using the `FakeJokeAPIAdapter`.
+    - Integrated support for `jokeapi` using the `JokeAPIAdapter`.
     - Integrated the `EventManager` to notify observers (both `ConsoleLogger` and `FileLogger`) about user activities.
 
 - Added functionality to log user interactions dynamically in both the console and a file (`chatbot_logs.txt`).
@@ -133,19 +133,23 @@ This project was developed collaboratively by **Alisiia** and **Rayan**. Through
 
 ### **Creational Patterns**
 
-#### 1. Factory Pattern
+## Abstract Factory Pattern in Chatbot Response System
 
-- **Description**: The `ResponseFactory` class dynamically creates response objects based on user input.
+### Description
+The **Abstract Factory Pattern** is implemented in the chatbot response system to dynamically choose a mood-specific factory based on the chatbot's current mood. The `ResponseFactorySelector` selects one of the mood-specific factories: `HappyResponseFactory`, `GrumpyResponseFactory`, or `NeutralResponseFactory`, to create appropriate response objects.
 
-- **Code Example**:
+### Code Example
+
 ```java
-Response response = ResponseFactory.createResponse("greeting");
+// Select the appropriate factory based on the chatbot's current mood
+ResponseFactory responseFactory = ResponseFactorySelector.getFactory();
+
+// Create a greeting response from the selected factory
+Response response = responseFactory.createGreetingResponse();
+
+// Output the response message
 System.out.println(response.getMessage());
 ```
-
-- **Explanation**:
-    - The `ResponseFactory` supports different response types such as `GreetingResponse`, `FarewellResponse`, and `HelpResponse`.
-    - By centralizing response creation, the factory promotes extensibility and flexibility.
 
 - **Interaction**:
     - **Input**: `greeting`
@@ -188,16 +192,16 @@ System.out.println(decoratedResponse.getMessage());
 
 - **Code Example**:
 ```java
-ExternalAPIAdapter jokeAPI = new FakeJokeAPIAdapter();
+ExternalAPIAdapter jokeAPI = new JokeAPIAdapter();
 System.out.println("Chatbot: " + jokeAPI.getResponse("jokeapi"));
 ```
 
 - **Explanation**:
     - The `ExternalAPIAdapter` defines an interface for external API integration.
-    - The `FakeJokeAPIAdapter` simulates fetching jokes from an external API.
+    - The `JokeAPIAdapter` simulates fetching jokes from an external API.
 
 - **Interaction**:
-    - **Input**: `jokeapi`
+    - **Input**: `I want something new`
     - **Output**: `"Why don’t skeletons fight each other? Because they don’t have the guts!"`
 
 ---
@@ -238,8 +242,9 @@ System.out.println(response);
 
 ---
 
-## **Summary of Changes**
-As part of the feedback, several improvements were made to ensure alignment with design pattern best practices. Below is a summary of the key changes:
+## **Summary of Changes after feedback**
+### **Creational patterns**
+The key changes:
 
 1. **Replacement of Simple Factory with Abstract Factory:**  
    The previous implementation relied on a simple factory (`ResponseFactory`) to create response objects dynamically. It was refactored to use an **Abstract Factory** pattern, but it still called as **ResponseFactory** in files. Was created factory folder for that as well you can check in types folder updated files. This change ensures better separation of concerns, promotes scalability, and adheres to design pattern principles like the **Open-Closed Principle (OCP)**.
@@ -252,8 +257,8 @@ As part of the feedback, several improvements were made to ensure alignment with
     - The **base response objects** (e.g., `GreetingResponse`, `FarewellResponse`) are now created through mood-specific factories (`HappyResponseFactory`, `GrumpyResponseFactory`, `NeutralResponseFactory`).
     - Once created, the responses are **wrapped with decorators** dynamically within `ChatbotApp`, allowing mood-sensitive output formatting and emoji inclusion.
 
-### **Updated Files for Jokes System**
-
+### **Structural patterns**
+Updated Files for Jokes System:
 1. **`ChatbotApp.java`**
     - **Added logic** to switch to **Jokes Mode**.
     - **Integrated user commands** for `'Tell me jokes'`, `'more'`, and `'I want something new'`.
@@ -268,5 +273,5 @@ As part of the feedback, several improvements were made to ensure alignment with
     - **Fetches and adapts jokes** from the **external API** for the chatbot.
 
 4. **`JokeAPI.java`**
-    - **Simulates** the actual **external API** connection and response.
-    - Can be replaced with a **real external API** in the future without affecting the chatbot's functionality.
+    - Create the actual external API connection and response.
+    - Can be replaced with a real external API in the future without affecting the chatbot's functionality.

@@ -237,3 +237,17 @@ System.out.println(response);
     - **Log (File)**: Written to `chatbot_logs.txt`.
 
 ---
+
+## **Summary of Changes**
+As part of the feedback, several improvements were made to ensure alignment with design pattern best practices. Below is a summary of the key changes:
+
+1. **Replacement of Simple Factory with Abstract Factory:**  
+   The previous implementation relied on a simple factory (`ResponseFactory`) to create response objects dynamically. It was refactored to use an **Abstract Factory** pattern, but it still called as **ResponseFactory** in files. Was created factory folder for that as well you can check in types folder updated files. This change ensures better separation of concerns, promotes scalability, and adheres to design pattern principles like the **Open-Closed Principle (OCP)**.
+
+2. **Retention of the Decorator Pattern for Dynamic Enhancements:**  
+   The dynamic decorators (`EmojiDecorator`, `TextFormatterDecorator`, and `UppercaseDecorator`) were retained for enhancing base responses. These decorators continue to be applied dynamically at runtime based on the chatbot’s mood, providing flexible response customization.
+
+3. **Improved Response Generation Flow:**  
+   The chatbot’s response generation flow was refined by introducing **mood-specific factories** that are selected dynamically using the `ResponseFactorySelector` class.
+    - The **base response objects** (e.g., `GreetingResponse`, `FarewellResponse`) are now created through mood-specific factories (`HappyResponseFactory`, `GrumpyResponseFactory`, `NeutralResponseFactory`).
+    - Once created, the responses are **wrapped with decorators** dynamically within `ChatbotApp`, allowing mood-sensitive output formatting and emoji inclusion.

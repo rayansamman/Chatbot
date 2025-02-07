@@ -3,7 +3,8 @@ package app;
 import decorator.EmojiDecorator;
 import decorator.TextFormatterDecorator;
 import response.Response;
-import response.ResponseFactory;
+import response.factory.ResponseFactory;
+import response.factory.ResponseFactorySelector;
 import response.types.GreetingResponse;
 import behavioral.InputAdapter;
 import behavioral.UserInputAdapter;
@@ -29,14 +30,17 @@ public class ChatbotApp {
         config.printConfig();
 
         InputAdapter inputAdapter = new UserInputAdapter();
-        ResponseStrategy currentStrategy = new SmallTalkStrategy(); // Default strategy
+        ResponseStrategy currentStrategy = new SmallTalkStrategy();
         EventManager eventManager = new EventManager();
         eventManager.addObserver(new ConsoleLogger());
-        eventManager.addObserver(new FileLogger()); // Add FileLogger for logging to a file
+        eventManager.addObserver(new FileLogger());
 
-        // Welcome message with decorators
-        Response welcome = new EmojiDecorator(new TextFormatterDecorator(new GreetingResponse()));
+        // Initial welcome message with mood-based response
+        ResponseFactory responseFactory = ResponseFactorySelector.getFactory();
+        Response welcome = responseFactory.createGreetingResponse();
+        welcome = new EmojiDecorator(new TextFormatterDecorator(welcome));  // Apply dynamic decorators
         System.out.println("Chatbot (" + config.getBotName() + "): " + welcome.getMessage());
+
         System.out.println("Type 'greeting', 'farewell', 'help', 'faq', 'joke', 'jokeapi', or 'exit' to quit.");
 
         Scanner scanner = new Scanner(System.in);
@@ -109,8 +113,25 @@ public class ChatbotApp {
 
     // Handle predefined commands with decorators
     private static void handlePredefinedCommands(String input) {
-        Response response = ResponseFactory.createResponse(input);
+        ResponseFactory responseFactory = ResponseFactorySelector.getFactory();
 
+        Response response;
+        switch (input.toLowerCase()) {
+            case "greeting":
+                response = responseFactory.createGreetingResponse();
+                break;
+            case "farewell":
+                response = responseFactory.createFarewellResponse();
+                break;
+            case "help":
+                response = responseFactory.createHelpResponse();
+                break;
+            default:
+                System.out.println("Chatbot: I didn't understand that command.");
+                return;
+        }
+
+        // Apply decorators dynamically based on mood
         Response decoratedResponse = new EmojiDecorator(new TextFormatterDecorator(response));
         System.out.println("Chatbot: " + decoratedResponse.getMessage());
     }

@@ -12,15 +12,13 @@ public class EmojiDecorator implements Response {
 
     @Override
     public String getMessage() {
-        ChatbotConfig config = ChatbotConfig.getInstance();
-        String mood = config.getMood();
-
+        String mood = ChatbotConfig.getInstance().getMood();
         String message = response.getMessage();
+
         return switch (mood.toLowerCase()) {
             case "happy" -> message + " 😊";
-            case "grumpy" -> "Ugh... " + message + " 🙄";
-            default -> // Neutral
-                    message;
+            case "grumpy" -> message + " 🙄";
+            default -> message;
         };
     }
 }

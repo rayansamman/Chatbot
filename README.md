@@ -275,3 +275,26 @@ Updated Files for Jokes System:
 4. **`JokeAPI.java`**
     - Create the actual external API connection and response.
     - Can be replaced with a real external API in the future without affecting the chatbot's functionality.
+
+  ### **Strategy Pattern**
+1. Added a `setStrategy(ResponseStrategy strategy)` method to allow dynamic switching of chatbot behavior.
+2. The chatbot explicitly calls `setStrategy()` when the user switches modes (e.g., `faq`, `jokes`).
+
+### **Observer Pattren**
+- Enhanced `EventManager` notifications for key chatbot actions, including:
+User input processing
+Strategy switching (`faq`, `jokes`, etc.)
+Bot name and mood updates
+User exit events
+
+### Updated Files:
+1. `ChatbotApp.java`
+Added `setStrategy(ResponseStrategy strategy)` to dynamically switch strategies.
+Ensured strategy changes are logged via `EventManager`.
+Added notifications for bot name and mood changes.
+
+2. `EventManager.java`
+Improved observer notifications to log key chatbot actions.
+
+3. `FileLogger.java` & `ConsoleLogger.java`
+Now logs strategy changes, user input, and bot state updates.

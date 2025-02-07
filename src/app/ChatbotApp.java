@@ -85,12 +85,6 @@ public class ChatbotApp {
                 continue;
             }
 
-            if (userInput.equalsIgnoreCase("joke")) {
-                setStrategy(new JokeStrategy());
-                System.out.println("Chatbot: Switched to Joke mode.");
-                continue;
-            }
-
             // Switch to Joke strategy
             if (userInput.equalsIgnoreCase("Tell me jokes")) {
                 jokesMode = true;
